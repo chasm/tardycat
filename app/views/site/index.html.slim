@@ -1,1 +1,6 @@
 h2 site#index
+
+ol
+  - @users.each do |user|
+    li
+      = user.email
