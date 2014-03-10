@@ -22,6 +22,10 @@ body {
   padding: 0 0 60px;    /* Pad bottom by footer height */
 }
 
+.logout-link {
+  margin-top: 8px;
+}
+
 h1 {
   margin: 0;
   padding: 0;
