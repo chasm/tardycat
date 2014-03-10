@@ -3,7 +3,6 @@
     = form_for :user, url: login_url, html: { id: "loginform" } do |f|
       fieldset
         legend Please sign in
-        .form-group = flash.map {|name, message| "#{name}: #{message}"}.join("; ")
         .form-group
           = f.label :email, class: "sr-only"
           = f.text_field :email, class: "form-control", placeholder: "Email address"

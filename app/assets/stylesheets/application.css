@@ -9,6 +9,11 @@ body {
   background-color: hsla( 0, 0.0%, 100.0%, 1 );
 }
 
+.noty_text {
+  font-size: 18px;
+  font-weight: normal;
+}
+
 #wrap {
   min-height: 100%;
   height: auto !important;
