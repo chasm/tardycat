@@ -8,13 +8,14 @@ class SessionController < ApplicationController
 
     if @user
       session[:user_id] = @user.id
-      render text: "Logged you in!"
+      redirect_to root_url
     else
-      render text: "Who are you, really?"
+      render :new
     end
   end
 
   def destroy
-    render text: "Log the user out."
+    session[:user_id] = nil
+    redirect_to login_url
   end
 end
