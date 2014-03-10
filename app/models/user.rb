@@ -4,6 +4,8 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  PASSWORD_RESET_EXPIRES = 4.hours
+
   attr_accessor :password, :password_confirmation
 
   before_save :set_random_password, :encrypt_password
@@ -11,6 +13,9 @@ class User
   field :email, type: String
   field :salt, type: String
   field :fish, type: String
+
+  field :code, type: String
+  field :expires_at, type: Time
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }
 
@@ -21,6 +26,16 @@ class User
   def self.authenticate(email, password)
     user = User.find_by email: email
     user if user and user.authenticate(password)
+  end
+
+  def set_password_reset
+    self.code = SecureRandom.urlsafe_base64
+    set_expiration
+  end
+
+  def set_expiration
+    self.expires_at = PASSWORD_RESET_EXPIRES.from_now
+    self.save!
   end
 
   protected
