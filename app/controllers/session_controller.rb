@@ -1,11 +1,10 @@
 class SessionController < ApplicationController
 
   def new
-    render text: "Display the log in form."
   end
 
   def create
-    render text: "Log the user in."
+    render text: "Log #{params[:user][:email]} in with #{params[:user][:password]}."
   end
 
   def destroy
