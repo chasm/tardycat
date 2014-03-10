@@ -10,12 +10,13 @@ class SessionController < ApplicationController
       session[:user_id] = @user.id
       redirect_to root_url
     else
+      flash.now[:alert] = "Unable to log you in. Please check your email and password and try again."
       render :new
     end
   end
 
   def destroy
     session[:user_id] = nil
-    redirect_to login_url
+    redirect_to login_url, notice: "You've successfully logged out."
   end
 end
