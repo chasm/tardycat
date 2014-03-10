@@ -6,11 +6,13 @@ class User
 
   attr_accessor :password, :password_confirmation
 
-  before_save :encrypt_password
+  before_save :set_random_password, :encrypt_password
 
   field :email, type: String
   field :salt, type: String
   field :fish, type: String
+
+  validates :email, presence: true, uniqueness: { case_sensitive: false }
 
   def authenticate(password)
     self.fish == BCrypt::Engine.hash_secret(password, self.salt)
@@ -27,6 +29,13 @@ class User
     if password.present?
       self.salt = BCrypt::Engine.generate_salt
       self.fish = BCrypt::Engine.hash_secret(password, self.salt)
+    end
+  end
+
+  def set_random_password
+    if password.blank? and self.fish.blank?
+      self.salt = BCrypt::Engine.generate_salt
+      self.fish = BCrypt::Engine.hash_secret(SecureRandom.base64(32), self.salt)
     end
   end
 end
