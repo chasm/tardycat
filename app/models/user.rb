@@ -4,7 +4,7 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  PASSWORD_RESET_EXPIRES = 4.hours
+  PASSWORD_RESET_EXPIRES = 1.day
 
   attr_accessor :password, :password_confirmation
 
@@ -19,6 +19,13 @@ class User
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }
   validates :password, confirmation: true
+
+  def self.find_by_code(code)
+    if user = User.find_by( :code => code, :expires_at.gte => Time.now.gmtime )
+      user.set_expiration
+    end
+    user
+  end
 
   def authenticate(password)
     self.fish == BCrypt::Engine.hash_secret(password, self.salt)
