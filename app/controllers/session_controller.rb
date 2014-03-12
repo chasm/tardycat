@@ -9,10 +9,18 @@ class SessionController < ApplicationController
 
     if @user
       if params[:user][:password].blank?
-        @user.set_password_reset
-        UserNotifier.reset_password(@user).deliver
-        flash.now[:notice] = "We sent you an email with instructions for resetting your password."
-        render :new
+        if @user.set_password_reset
+          begin
+            UserNotifier.reset_password(@user).deliver
+            flash.now[:notice] = "We sent you an email with instructions for resetting your password."
+          rescue
+            flash.now[:alert] = "Unable to send email. Please notify the webmaster."
+          end
+          render :new
+        else
+          flash.now[:alert] = "Password reset failed. Please notify the webmaster."
+          render :new
+        end
       elsif @user.authenticate( params[:user][:password] )
         session[:user_id] = @user.id
         redirect_to root_url
