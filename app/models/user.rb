@@ -46,6 +46,10 @@ class User
     self.save
   end
 
+  def reset_password(params)
+    self.update_attributes params.merge( code: nil, expires_at: nil )
+  end
+
   protected
 
   def encrypt_password

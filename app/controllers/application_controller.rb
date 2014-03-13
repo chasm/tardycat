@@ -12,6 +12,14 @@ class ApplicationController < ActionController::Base
     redirect_to login_url unless current_user
   end
 
+  def log_user_in(user)
+    session[:user_id] = user.id
+  end
+
+  def log_user_out
+    session[:user_id] = nil
+  end
+
   private
 
   def make_action_mailer_use_request_host_and_protocol
