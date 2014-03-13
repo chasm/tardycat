@@ -1,15 +1,12 @@
 class UserAuthenticator
+  AUTH_FAILED = "Unable to log you in. Please check your email and password and try again."
 
-  def initialize(session, flash)
-    @session = session
+  def initialize(flash)
     @flash = flash
   end
 
   def authenticate_user(params)
-    if @user = User.authenticate(params[:email], params[:password])
-      @session[:user_id] = @user.id
-    else
-      @flash.now[:alert] = "Unable to log you in. Please check your email and password and try again."
-    end
+    @flash.now[:alert] = AUTH_FAILED unless @user = User.authenticate( params[:email], params[:password] )
+    @user
   end
 end

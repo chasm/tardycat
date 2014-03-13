@@ -8,15 +8,14 @@ class SessionController < ApplicationController
     if params[:user][:password].blank?
       PasswordResetter.new(flash).handle_reset_request(user_params)
     else
-      UserAuthenticator.new(session, flash).authenticate_user(user_params)
+      return if log_user_in( UserAuthenticator.new(flash).authenticate_user(user_params) )
     end
-    (redirect_to root_url and return) if flash.empty?
+
     render :new
   end
 
   def destroy
-    session[:user_id] = nil
-    redirect_to login_url, notice: "You've successfully logged out."
+    log_user_out
   end
 
   private

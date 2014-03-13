@@ -12,6 +12,19 @@ class ApplicationController < ActionController::Base
     redirect_to login_url unless current_user
   end
 
+  def log_user_in(user)
+    if user
+      session[:user_id] = user.id
+      redirect_to root_url
+      true
+    end
+  end
+
+  def log_user_out
+    session[:user_id] = nil
+    redirect_to login_url, notice: "You've successfully logged out."
+  end
+
   private
 
   def make_action_mailer_use_request_host_and_protocol
