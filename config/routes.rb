@@ -4,8 +4,7 @@ P2::Application.routes.draw do
   # Log in/out
   get    'login'  => 'session#new', as: :login_form
   post   'login'  => 'session#create', as: :log_in
-  delete 'logout' => 'session#destroy'
-  get    'logout' => 'session#destroy' # TODO: remove before deployment
+  delete 'logout' => 'session#destroy', as: :log_out
 
   # Password reset
   get   'reset/:code' => 'password#edit', as: :reset_password

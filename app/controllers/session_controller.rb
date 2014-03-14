@@ -16,7 +16,7 @@ class SessionController < ApplicationController
   end
 
   def destroy
-    log_user_out
+    log_user_out_and_redirect
   end
 
   private
