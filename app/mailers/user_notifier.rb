@@ -1,18 +1,18 @@
 class UserNotifier < ActionMailer::Base
   default from: "ToddyCat <webmaster@toddycat.com>"
 
-  LINK_TO_RESET = "[ToddyCat] Reset your credentials"
-  WAS_RESET     = "[ToddyCat] Your password has been reset!"
+  CODED_RESET_LINK_SUBJCT    = "[ToddyCat] Reset your credentials"
+  PASSWORD_WAS_RESET_SUBJECT = "[ToddyCat] Your password has been reset!"
 
-  def reset_password(user)
+  def coded_password_reset_link(user)
     @user = user
 
-    mail to: @user.email, subject: LINK_TO_RESET
+    mail to: @user.email, subject: CODED_RESET_LINK_SUBJCT
   end
 
   def password_was_reset(user)
     @user = user
 
-    mail to: @user.email, subject: WAS_RESET
+    mail to: @user.email, subject: PASSWORD_WAS_RESET_SUBJECT
   end
 end
