@@ -10,25 +10,24 @@ class User
 
   before_save :set_random_password, :encrypt_password
 
-  field :email, type: String
-  field :salt, type: String
-  field :fish, type: String
+  field :email
+  field :salt
+  field :fish
 
-  field :code, type: String
-  field :expires_at, type: Time
+  field :reset_code
+  field :reset_expires_at, type: Time
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }
   validates :password, confirmation: true
 
   def self.find_by_code(code)
-    if user = User.find_by( :code => code, :expires_at.gte => Time.now.gmtime )
-      user.set_expiration
+    if user = User.find_by(
+        :reset_code => code,
+        :reset_expires_at.gte => Time.now.gmtime
+      )
+      user.set_reset_expiration
     end
     user
-  end
-
-  def authenticate(password)
-    self.fish == BCrypt::Engine.hash_secret(password, self.salt)
   end
 
   def self.authenticate(email, password)
@@ -36,38 +35,44 @@ class User
     user if user and user.authenticate(password)
   end
 
-  def set_password_reset
-    self.code = SecureRandom.urlsafe_base64
-    set_expiration
+  def authenticate(password)
+    self.fish == BCrypt::Engine.hash_secret(password, self.salt)
   end
 
-  def set_expiration
-    self.expires_at = PASSWORD_RESET_EXPIRES.from_now
+  def set_password_reset
+    self.reset_code = SecureRandom.urlsafe_base64
+    set_reset_expiration
+  end
+
+  def set_reset_expiration
+    self.reset_expires_at = PASSWORD_RESET_EXPIRES.from_now
     self.save
   end
 
   def reset_password(params)
     if params[:password].blank?
       self.errors.add :password, "can't be blank"
-      false
+      return false
     else
-      self.update_attributes params.merge( code: nil, expires_at: nil )
+      self.update_attributes(
+        params.merge( reset_code: nil, reset_expires_at: nil )
+      )
     end
   end
 
   protected
 
+  def set_salt
+    self.salt = BCrypt::Engine.generate_salt
+  end
+
   def encrypt_password
-    if password.present?
-      self.salt = BCrypt::Engine.generate_salt
-      self.fish = BCrypt::Engine.hash_secret(password, self.salt)
-    end
+    self.fish = BCrypt::Engine.hash_secret(password, set_salt) if password.present?
   end
 
   def set_random_password
     if password.blank? and self.fish.blank?
-      self.salt = BCrypt::Engine.generate_salt
-      self.fish = BCrypt::Engine.hash_secret(SecureRandom.base64(32), self.salt)
+      self.fish = BCrypt::Engine.hash_secret(SecureRandom.base64(32), set_salt)
     end
   end
 end
