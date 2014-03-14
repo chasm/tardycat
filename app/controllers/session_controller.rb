@@ -8,7 +8,8 @@ class SessionController < ApplicationController
     if params[:user][:password].blank?
       PasswordResetter.new(flash).handle_reset_request(user_params)
     else
-      return if log_user_in( UserAuthenticator.new(flash).authenticate_user(user_params) )
+      user = UserAuthenticator.new(flash).authenticate_user(user_params)
+      return if log_user_in_and_redirect( user )
     end
 
     render :new

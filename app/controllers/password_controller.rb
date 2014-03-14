@@ -4,7 +4,7 @@ class PasswordController < ApplicationController
 
   def edit
     unless @user = User.find_by_code( params[:code] )
-      redirect_to login_url, notice: LINK_EXPIRED
+      redirect_to login_form_url, notice: LINK_EXPIRED
     end
   end
 

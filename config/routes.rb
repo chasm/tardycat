@@ -2,8 +2,8 @@ P2::Application.routes.draw do
   root 'site#index'
 
   # Log in/out
-  get    'login'  => 'session#new'
-  post   'login'  => 'session#create'
+  get    'login'  => 'session#new', as: :login_form
+  post   'login'  => 'session#create', as: :log_in
   delete 'logout' => 'session#destroy'
   get    'logout' => 'session#destroy' # TODO: remove before deployment
 

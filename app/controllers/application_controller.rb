@@ -9,10 +9,10 @@ class ApplicationController < ActionController::Base
   end
 
   def is_authenticated?
-    redirect_to login_url unless current_user
+    redirect_to login_form_url unless current_user
   end
 
-  def log_user_in(user)
+  def log_user_in_and_redirect(user)
     if user
       session[:user_id] = user.id
       redirect_to root_url
@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
 
   def log_user_out
     session[:user_id] = nil
-    redirect_to login_url, notice: "You've successfully logged out."
+    redirect_to login_form_url, notice: "You've successfully logged out."
   end
 
   private
