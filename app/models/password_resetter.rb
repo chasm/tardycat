@@ -1,45 +1,57 @@
 class PasswordResetter
 
-  SUCCESS = "We sent you an email with instructions for resetting your password."
-  NO_MAIL = "Unable to send email. Please notify the webmaster."
-  NO_SAVE = "Password reset failed. Please notify the webmaster."
-  NO_USER = "Unable to log you in. Please check your email and password and try again."
+  SUCCESS = %{ We sent you an email with instructions for
+    resetting your password.}.squish
+
+  USER_NOT_FOUND = %{ Unable to log you in. Please check your email
+    and password and try again.}.squish
+
+  MAIL_FAILED = "Unable to send email. Please notify the webmaster."
+  SAVE_FAILED = "Password reset failed. Please notify the webmaster."
+
+
 
   def initialize(flash)
     @flash = flash
   end
 
-  def handle_reset_request(params)
-    if @user = User.find_by( email: params[:email] )
-      update_user_and_send_mail
+  def handle_reset_request(user_params)
+    if @user = User.find_by( email: user_params[:email] )
+      set_reset_code_and_notify_user
     else
-      @flash.now[:alert] = NO_USER
+      @flash.now[:alert] = USER_NOT_FOUND
     end
   end
 
-  def update_password(user, params)
-    if user.reset_password( params )
-      UserNotifier.password_was_reset( user ).deliver
+  def update_password(user, user_params)
+    if user.reset_password( user_params )
+      begin
+        UserNotifier.password_was_reset( user ).deliver
+      rescue
+        # Mail didn't send
+      end
+      
       return true
     end
   end
 
   private
 
-  def update_user_and_send_mail
-    if @user.set_password_reset
-      send_reset_email
+  def set_reset_code_and_notify_user
+    if @user.set_reset_code
+      send_password_reset_coded_link
     else
-      @flash.now[:alert] = NO_SAVE
+      @flash.now[:alert] = SAVE_FAILED
     end
   end
 
-  def send_reset_email
+  def send_password_reset_coded_link
     begin
       UserNotifier.reset_password(@user).deliver
+
       @flash.now[:notice] = SUCCESS
     rescue
-      @flash.now[:alert] = NO_MAIL
+      @flash.now[:alert] = MAIL_FAILED
     end
   end
 end
