@@ -16,7 +16,6 @@ class ApplicationController < ActionController::Base
     if user
       session[:user_id] = user.id
       redirect_to root_url
-      true
     end
   end
 
