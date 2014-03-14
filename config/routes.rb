@@ -8,7 +8,7 @@ P2::Application.routes.draw do
   get    'logout' => 'session#destroy' # TODO: remove before deployment
 
   # Password reset
-  get   'reset/:code' => 'password#edit', as: :reset
+  get   'reset/:code' => 'password#edit', as: :reset_password
   put   'reset/:code' => 'password#update'
   patch 'reset/:code' => 'password#update'
 
