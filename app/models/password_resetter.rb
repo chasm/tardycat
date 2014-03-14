@@ -50,7 +50,9 @@ class PasswordResetter
       UserNotifier.coded_password_reset_link(@user).deliver
 
       @flash.now[:notice] = SUCCESS
-    rescue
+    rescue Exception => e
+      puts e.message
+      puts e.backtrace.inspect
       @flash.now[:alert] = MAIL_FAILED
     end
   end

@@ -1,25 +1,29 @@
 class PasswordController < ApplicationController
-  LINK_EXPIRED   = "Sorry, your reset link has expired. Please generate a new one."
-  PASSWORD_RESET = "Your password has been successfully reset."
+  PASSWORD_RESET_SUCCESSFUL = "Your password has been successfully reset."
+
+  USER_NOT_FOUND = %{ Sorry, your reset link has expired.
+    Please generate a new one.}.squish
 
   def edit
     unless @user = User.find_by_code( params[:code] )
-      redirect_to login_form_url, notice: LINK_EXPIRED
+      redirect_to login_form_url, notice: USER_NOT_FOUND
     end
   end
 
   def update
     if @user = User.find_by_code( params[:code] )
-      if PasswordResetter.new(flash).update_password( @user, user_params )
-        log_user_in( @user )
-        redirect_to( root_url, notice: PASSWORD_RESET ) and return
+      resetter = PasswordResetter.new(flash)
+
+      if resetter.update_password( @user, user_params )
+        flash[:notice] = PASSWORD_RESET_SUCCESSFUL
+        log_user_in_and_redirect( @user )
       else
         flash.now[:alert] = @user.errors
+        render :edit
       end
     else
-      flash.now[:alert] = LINK_EXPIRED
+      redirect_to login_form_url, alert: USER_NOT_FOUND
     end
-    render :edit
   end
 
   private

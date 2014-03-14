@@ -7,9 +7,8 @@ P2::Application.routes.draw do
   delete 'logout' => 'session#destroy', as: :log_out
 
   # Password reset
-  get   'reset/:code' => 'password#edit', as: :reset_password
-  put   'reset/:code' => 'password#update'
-  patch 'reset/:code' => 'password#update'
+  get   'reset/:code' => 'password#edit', as: :password_reset_form
+  patch 'reset/:code' => 'password#update', as: :reset_password
 
   get 'privacy' => 'site#privacy'
   get 'terms'   => 'site#terms'
