@@ -15,11 +15,13 @@ class PasswordResetter
     @flash = flash
   end
 
-  def handle_reset_request(user_params)
-    if @user = User.find_by( email: user_params[:email] )
-      set_reset_code_and_notify_user
+  def set_reset_code_and_notify_user(user)
+    @user = user
+
+    if @user.set_reset_code
+      send_password_reset_coded_link
     else
-      @flash.now[:alert] = USER_NOT_FOUND
+      @flash.now[:alert] = SAVE_FAILED
     end
   end
 
@@ -36,14 +38,6 @@ class PasswordResetter
   end
 
   private
-
-  def set_reset_code_and_notify_user
-    if @user.set_reset_code
-      send_password_reset_coded_link
-    else
-      @flash.now[:alert] = SAVE_FAILED
-    end
-  end
 
   def send_password_reset_coded_link
     begin

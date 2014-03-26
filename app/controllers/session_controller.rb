@@ -5,8 +5,12 @@ class SessionController < ApplicationController
   end
 
   def create
-    if params[:user][:password].blank?
-      PasswordResetter.new(flash).handle_reset_request(user_params)
+    if user_params[:password].blank?
+      if user = User.find_by( email: user_params[:email] )
+        PasswordResetter.new(flash).set_reset_code_and_notify_user(user)
+      else
+        UserRegisterer.new(flash).create_a_new_registrant(user_params[:email])
+      end
     else
       user = UserAuthenticator.new(flash).authenticate_user(user_params)
       return if log_user_in_and_redirect( user )
