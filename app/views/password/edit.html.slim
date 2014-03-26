@@ -10,4 +10,5 @@
           = f.label :password_confirmation, class: "sr-only"
           = f.password_field :password_confirmation, class: "form-control", placeholder: "Type it again"
         .form-group
-          = f.submit "Update Password", class: "btn btn-success"
+          => f.submit "Save", class: "btn btn-success"
+          button#show-password-button.btn.btn-warning data-state="show" Show Passwords
