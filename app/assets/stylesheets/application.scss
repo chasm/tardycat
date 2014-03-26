@@ -3,10 +3,48 @@
  *= require_tree .
  */
 
+// Danger (pale red)
+$bgnd-danger:          hsla(2, 64.4860%, 58.0392%, 1);
+$border-danger:        hsla(2, 64.1667%, 52.9412%, 1);
+$bgnd-danger-hover:    hsla(2, 64.7059%, 50%,      1);
+$border-danger-hover:  hsla(2, 64.5933%, 40.9804%, 1);
+$text-danger:          hsla(1, 44.6640%, 50.3922%, 1);
+
+// Warning (pale orange)
+$bgnd-warning:         hsla(35, 84.3750%, 62.3529%, 1);
+$border-warning:       hsla(35, 84.4037%, 57.2549%, 1);
+$bgnd-warning-hover:   hsla(35, 84.5494%, 54.3137%, 1);
+$border-warning-hover: hsla(35, 84.4156%, 45.2941%, 1);
+$text-warning:         hsla(38, 46.3830%, 53.9216%, 1);
+
+// Success (pale green)
+$bgnd-success:         hsla(120, 39.3162%, 54.1176%, 1);
+$border-success:       hsla(120, 39.2000%, 49.0196%, 1);
+$bgnd-success-hover:   hsla(120, 39.5745%, 46.0784%, 1);
+$border-success-hover: hsla(120, 39.6825%, 37.0588%, 1);
+$text-success:         hsla(121, 32.0388%, 40.3922%, 1);
+
+// Info (cyanish)
+$bgnd-info:            hsla(194, 66.4975%, 61.3725%, 1);
+$border-info:          hsla(194, 66.6667%, 56.4706%, 1);
+$bgnd-info-hover:      hsla(194, 66.3866%, 53.3333%, 1);
+$border-info-hover:    hsla(194, 66.3717%, 44.3137%, 1);
+$text-info:            hsla(200, 49.7835%, 45.2941%, 1);
+
+// Primary (blue)
+$bgnd-primary:         hsla(208, 56.1983%, 52.5490%, 1);
+$border-primary:       hsla(208, 56.1983%, 47.4510%, 1);
+$bgnd-primary-hover:   hsla(208, 55.9471%, 44.5098%, 1);
+$border-primary-hover: hsla(208, 56.0440%, 35.6863%, 1);
+$text-primary:         hsla(208, 56.1983%, 52.5490%, 1);
+
+$bgnd-color:           hsla(0, 0.0%, 100.0%, 1);
+$footer-bgnd:          hsla(0, 0.0%,  96.0%, 1);
+
 html,
 body {
   height: 100%;
-  background-color: hsla( 0, 0.0%, 100.0%, 1 );
+  background-color: $bgnd-color;
 }
 
 .noty_text {
@@ -31,12 +69,32 @@ h1 {
   padding: 0;
 }
 
+#pw-quality {
+  font-size: 1.1em;
+}
+
+.crack-div {
+  font-size: 1.2em;
+  margin-top: -10px;
+}
+
+.match-div {
+  font-size: 1.2em;
+  margin-top: 20px;
+  color: red;
+}
+
+.match-div.pmatch {
+  font-weight: bold;
+  color: $bgnd-success;
+}
+
 legend {
   text-align: left;
   font-size: 130%;
   line-height: 1.5;
-  color: #5cb85c;
-  border-bottom: 1px solid #5cb85c;
+  color: $bgnd-success;
+  border-bottom: 1px solid $bgnd-success;
 }
 
 .main {
@@ -45,7 +103,7 @@ legend {
 
 footer {
   height: 60px;
-  background-color: hsla( 0, 0.0%, 96.0%, 1 );
+  background-color: $footer-bgnd;
 }
 
 .container .credit {

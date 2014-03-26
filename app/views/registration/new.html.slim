@@ -1,4 +1,4 @@
-= form_for @user, url: register_url( params[:code] ), html: { id: "registerform" } do |f|
+= form_for @user, url: register_url( params[:code] ), html: { class: "registration-form" } do |f|
   fieldset
     legend.col-md-8.col-md-offset-2.col-sm-12 Complete registration for #{@user.email}
     .reset-form.row
@@ -19,6 +19,6 @@
         .crack-div
           strong> Time to crack:
           span#time-to-crack instant
-        #match-div
+        #match-div.match-div
 
 script src="/js/zxcvbn-async.js"
