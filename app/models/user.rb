@@ -67,7 +67,8 @@ class User
       return false
     else
       if self.update_attributes( user_params )
-        self.update_attributes({ reset_code: nil, reset_expires_at: nil })
+        self.unset( :reset_code )
+        self.unset( :reset_expires_at )
       end
     end
   end

@@ -3,6 +3,11 @@ class UserRegisterer
   SUCCESS = %{ We sent you an email with instructions for
     completing your registration.}.squish
 
+  WELCOME = %{
+    You have successfully completed your ToddyCat registration and
+    are logged in. Welcome to ToddyCat!
+  }.squish
+
   MAIL_FAILED = "Unable to send email. Please notify the webmaster."
   SAVE_FAILED = "Registration failed. Please notify the webmaster."
 
@@ -14,17 +19,26 @@ class UserRegisterer
     @registrant = Registrant.find_or_initialize_by( email: email )
 
     if @registrant.save
-      puts "REGISTRANT IN create_a_new_registrant", @registrant
       send_registration_coded_link
     else
       @flash.now[:alert] = SAVE_FAILED
     end
   end
 
+  def create_new_user_from_registrant(registrant, user_params)
+    params = user_params.merge( email: registrant.email )
+
+    if user = User.create( params )
+      registrant.destroy
+      send_welcome_email(user)
+    end
+
+    user
+  end
+
   private
 
   def send_registration_coded_link
-    puts "REGISTRANT IN send_registration_coded_link", @registrant
     begin
       UserNotifier.coded_registration_link(@registrant).deliver
 
@@ -33,6 +47,16 @@ class UserRegisterer
       puts e.message
       puts e.backtrace.inspect
       @flash.now[:alert] = MAIL_FAILED
+    end
+  end
+
+  def send_welcome_email(user)
+    begin
+      UserNotifier.welcome(user).deliver
+    rescue Exception => e
+      puts e.message
+      puts e.backtrace.inspect
+      # Fail silently
     end
   end
 end
