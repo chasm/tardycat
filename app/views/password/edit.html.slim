@@ -5,10 +5,10 @@
         legend Choose a new password
         .form-group
           = f.label :password, class: "sr-only"
-          = f.password_field :password, class: "form-control", placeholder: "New password"
+          = f.password_field :password, class: "form-control showable-password", placeholder: "New password"
         .form-group
           = f.label :password_confirmation, class: "sr-only"
-          = f.password_field :password_confirmation, class: "form-control", placeholder: "Type it again"
+          = f.password_field :password_confirmation, class: "form-control showable-password", placeholder: "Type it again"
         .form-group
           => f.submit "Save", class: "btn btn-success"
           button#show-password-button.btn.btn-warning data-state="show" Show Passwords
