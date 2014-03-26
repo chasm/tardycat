@@ -3,7 +3,7 @@ class Registrant
 
   REGISTRATION_TIME_LIMIT = 1.day
 
-  before_create :downcase_email, :set_code
+  before_create :downcase_attributes, :set_code
   before_save :set_registration_expiration
 
   field :email
@@ -37,7 +37,7 @@ class Registrant
 
   private
 
-  def downcase_email
+  def downcase_attributes
     self.email.downcase!
   end
 

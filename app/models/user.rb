@@ -4,11 +4,13 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  PASSWORD_RESET_EXPIRES = 1.day
+  PASSWORD_RESET_TIME_LIMIT = 1.day
 
   attr_accessor :password, :password_confirmation
 
-  before_save :set_random_password, :encrypt_password
+  before_create :set_random_password, unless: :password
+  before_save :encrypt_password, if: :password
+  before_save :downcase_attributes
 
   field :email
   field :salt
@@ -20,13 +22,23 @@ class User
   validates :email, presence: true, uniqueness: { case_sensitive: false }
   validates :password, confirmation: true
 
+  def self.nil_expired_reset_codes
+    User.where( :reset_expires_at.lt => Time.now.gmtime ).unset(
+      :reset_code,
+      :reset_expires_at
+    )
+  end
+
   def self.find_by_code(code)
+    User.nil_expired_reset_codes
+
     if user = User.find_by(
         :reset_code => code,
         :reset_expires_at.gte => Time.now.gmtime
       )
       user.set_reset_expiration
     end
+
     user
   end
 
@@ -45,7 +57,7 @@ class User
   end
 
   def set_reset_expiration
-    self.reset_expires_at = PASSWORD_RESET_EXPIRES.from_now
+    self.reset_expires_at = PASSWORD_RESET_TIME_LIMIT.from_now
     self.save
   end
 
@@ -62,16 +74,20 @@ class User
 
   protected
 
+  def downcase_attributes
+    self.email.downcase!
+  end
+
   def set_salt
     self.salt = BCrypt::Engine.generate_salt
   end
 
   def encrypt_password
-    self.fish = BCrypt::Engine.hash_secret(password, set_salt) if password.present?
+    self.fish = BCrypt::Engine.hash_secret(password, set_salt)
   end
 
   def set_random_password
-    if password.blank? and self.fish.blank?
+    if self.fish.blank?
       self.fish = BCrypt::Engine.hash_secret(SecureRandom.base64(32), set_salt)
     end
   end
