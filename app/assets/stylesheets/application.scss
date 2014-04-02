@@ -69,6 +69,25 @@ h1 {
   padding: 0;
 }
 
+.name-field {
+  float: left;
+  margin-left: 1%;
+  margin-right: 0;
+}
+
+.name-prefix {
+  margin-left: 0;
+  width: 13%;
+}
+
+.name-given { width: 25%; }
+
+.name-middle { width: 11%; }
+
+.name-family { width: 34%; }
+
+.name-suffix { width: 13%; }
+
 #pw-quality {
   font-size: 1.1em;
 }

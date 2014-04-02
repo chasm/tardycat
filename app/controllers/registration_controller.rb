@@ -7,7 +7,7 @@ class RegistrationController < ApplicationController
   }.squish
 
   def new
-    @user = User.new email: @registrant.email
+    @user = User.new name: Name.new, email: @registrant.email
   end
 
   def create
@@ -31,6 +31,10 @@ class RegistrationController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit( :password, :password_confirmation )
+    params.require(:user).permit(
+      :password,
+      :password_confirmation,
+      :name_attributes => [ :prefix, :given, :middle, :family, :suffix ]
+    )
   end
 end
