@@ -1,5 +1,6 @@
 class Name
   include Mongoid::Document
+  include CustomId
 
   embedded_in :user
 

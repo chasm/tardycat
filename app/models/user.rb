@@ -3,6 +3,7 @@ require 'bcrypt'
 class User
   include Mongoid::Document
   include Mongoid::Timestamps
+  include CustomId
 
   PASSWORD_RESET_TIME_LIMIT = 1.day
 
