@@ -1,4 +1,4 @@
-P2::Application.routes.draw do
+TardyCat::Application.routes.draw do
   root 'site#index'
 
   # Log in/out

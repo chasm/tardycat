@@ -3,4 +3,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-P2::Application.load_tasks
+TardyCat::Application.load_tasks

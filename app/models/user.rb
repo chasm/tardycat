@@ -12,12 +12,16 @@ class User
   before_save :encrypt_password, if: :password
   before_save :downcase_attributes
 
+  embeds_one :name
+
   field :email
   field :salt
   field :fish
 
   field :reset_code
   field :reset_expires_at, type: Time
+
+  accepts_nested_attributes_for :name
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }
   validates :password, confirmation: true
